@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Profile - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="index.html" style="background: url(&quot;assets/img/biblioteca-logo.png&quot;) center / cover;width: 100px;">
+                    <div class="sidebar-brand-icon"></div>
+                    <div class="sidebar-brand-text mx-3"></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link active" id="puto" href="usuarios.html"><i class="fas fa-user"></i><span>USUARIOS</span></a></li>
+                    <li class="nav-item"><a class="nav-link" id="puto2" href="libros.html"><i class="fa fa-book"></i><span>LIBROS</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="prestamos.html"><i class="fas fa-table"></i><span>PRESTAMOS Y DEVOLUCIONES</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid"><a class="navbar-brand justify-content-center align-items-center sidebar-brand m-0" id="nombreUsuario" href="#" style="width: 250px;height: 56px;padding-left: 5px;"></a><button class="btn" id="myBtn" type="button" style="color: var(--blue);"><i class="fa fa-power-off" data-toggle="tooltip" data-bss-tooltip="" style="color: var(--red);width: 25px;height: 25px;font-size: 25px;" title="SALIR DEL SISTEMA"></i></button></div>
+                </nav>
+                <div class="container-fluid" id="AdminUsuarios">
+                    <div class="alert alert-success collapse" role="alert" id="miAlerta"><span><strong>{{ alerta.titulo }} :</strong>&nbsp;{{ alerta.mensaje }}.</span><i class="fa fa-close close" v-on:click="cerrarAlerta();"></i></div>
+                    <h3 class="text-dark mb-0">USUARIOS</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <div class="row">
+                                <div class="col-md-6 text-nowrap">
+                                    <div></div><a class="btn btn-sm" role="button" data-toggle="modal" data-bss-tooltip="" style="height: 38px;width: auto;padding: 8px;background-color: transparent;color: var(--blue);font-size: 16px;" title="AGREGAR NUEVO USUARIO" v-on:click="mostrarAgregar"><i class="fa fa-sign-in" style="color: var(--blue);"></i>&nbsp;Nuevo</a>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-md-right"><label><input class="form-control-sm form-control form-control-sm" type="search" aria-controls="dataTable" placeholder="Search" v-model="textoBusqueda"></label></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Apellido</th>
+                                            <th>Correo</th>
+                                            <th>Rol</th>
+                                            <th>Estado</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(user, index) in usuarios" v-show="buscar(index)" v-on:click="usuarioSelected=index;" v-bind:class="{ 'font-weight-bold' : usuarioSelected==index }">
+                                            <td>{{user.nombre}}<br></td>
+                                            <td>{{user.apellido}}<br></td>
+                                            <td>{{user.correo}}<br></td>
+                                            <td>{{user.idRol.rol}}</td>
+                                            <td>{{user.idEstado.estado}}</td>
+                                            <td>&nbsp;<a href="#modalModificar" data-toggle="modal" style="padding: 5px;" v-on:click="mostrarModificar"><i class="fa fa-edit" data-toggle="tooltip" data-bss-tooltip="" style="color: #28a745;padding: 0px;font-size: 20px;" title="MODIFICAR"></i>&nbsp;</a><a href="#modalEliminar" data-toggle="modal" style="padding: 5px;">&nbsp;<i class="fa fa-trash-o" data-toggle="tooltip" data-bss-tooltip="" style="color: #dc3545;font-size: 20px;" title="ELIMINAR"></i></a><a data-toggle="modal" style="padding: 5px;color: var(--yellow);" v-on:click="mostrarPrevia">&nbsp;<i class="fa fa-eye" data-toggle="tooltip" data-bss-tooltip="" style="color: rgb(246, 194, 62);font-size: 20px;" title="DETALLE DE USUARIO"></i></a>&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalAgregar" style="color: #f0f9ff;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: rgb(78, 115, 223);">
+                                    <h4 class="modal-title" style="color: #ffffff;">Nuevo Usuario</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: rgb(248,249,252);">
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Nombres:</span></div><input class="form-control" type="text" v-model="nuevoUsuario.nombre" required="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Apellidos:</span></div><input class="form-control" type="text" v-model="nuevoUsuario.apellido" required="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Correo:</span></div><input class="form-control" type="text" v-model="nuevoUsuario.correo" required="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Contraseña:</span></div><input class="form-control" type="password" v-model="nuevoUsuario.password">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Estado</span></div><select class="form-control" v-model="nuevoUsuario.idEstado.idEstado">
+                                            <option value="1" selected="">Activo</option>
+                                            <option value="2">Moroso</option>
+                                            <option value="3">Multado</option>
+                                        </select>
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Rol</span></div><select class="form-control" v-model="nuevoUsuario.idRol.idRol">
+                                            <option value="1" selected="">Bibliotecario</option>
+                                            <option value="2">Maestro</option>
+                                            <option value="3">Estudiante</option>
+                                        </select>
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"></div>
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="background: var(--light);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><a class="btn btn-primary btn-sm" role="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #1ec304;" data-toggle="modal" v-on:click="mostrarAgregarDireccion">Siguiente</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalPrevia" style="color: #f0f9ff;">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: rgb(78, 115, 223);">
+                                    <h4 class="modal-title" style="color: #ffffff;">Usuario</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: rgb(248,249,252);">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Nombres:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].nombre" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Apellidos:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].apellido" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Correo:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].correo" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Contraseña:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].password" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Rol:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].idRol.rol" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Estado</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].idEstado.estado" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Calle:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].idDireccion.calle" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Ciudad:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].idDireccion.ciudad" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">No. Casa:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].idDireccion.numCasa" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group" style="padding: 10px;">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">C. Postal:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].idDireccion.codigoPostal" disabled="">
+                                                <div class="input-group-append"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-body" style="background: rgb(248,249,252);"></div>
+                                </div>
+                                <div class="modal-footer" style="background: var(--light);"><a class="btn btn-primary btn-sm" role="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #1ec304;" data-toggle="modal">Aceptar</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalModificar" style="color: #f0f9ff;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: rgb(78, 115, 223);">
+                                    <h4 class="modal-title" style="color: #ffffff;">Modificar Usuario</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: rgb(248,249,252);">
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Nombres:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].nombre">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Apellidos:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].apellido">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;" v-model="usuarios[usuarioSelected].correo">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Correo:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].correo">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Contraseña:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].password">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Estado</span></div><select class="form-control" v-model="usuarios[usuarioSelected].idEstado.idEstado">
+                                            <option value="1" selected="">Activo</option>
+                                            <option value="2">Moroso</option>
+                                            <option value="3">Multado</option>
+                                        </select>
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Rol</span></div><select class="form-control" v-model="usuarios[usuarioSelected].idRol.idRol">
+                                            <option value="1" selected="">Bibliotecario</option>
+                                            <option value="2">Maestro</option>
+                                            <option value="3">Estudiante</option>
+                                        </select>
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="background: var(--light);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><a class="btn btn-primary btn-sm" role="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #1ec304;" data-toggle="modal" v-on:click="mostrarModificarDireccion">Siguiente</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalEliminar" style="color: #f0f9ff;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: rgb(78, 115, 223);">
+                                    <h4 class="modal-title" style="color: #ffffff;">Eliminar Usuario</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: rgb(248,249,252);">
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Nombres:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].nombre" disabled="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Apellidos:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].apellido" disabled="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Correo:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].correo" disabled="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Contraseña:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].password" disabled="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="background: var(--light);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><a class="btn btn-primary btn-sm" role="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #c30f04;" data-toggle="modal" v-on:click="eliminarUsuario">Eliminar</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalAgregarDireccion" style="color: #f0f9ff;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: rgb(78, 115, 223);">
+                                    <h4 class="modal-title" style="color: #ffffff;">Nuevo Usuario</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: rgb(248,249,252);"><div class="input-group" style="padding: 10px;">
+    <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">C. Postal:</span></div><input type="number" class="form-control" v-model="nuevoUsuario.idDireccion.codigoPostal" min=0 required />
+    <div class="input-group-append"></div>
+</div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Calle:</span></div><input class="form-control" type="text" v-model="nuevoUsuario.idDireccion.calle" required="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Ciudad:</span></div><input class="form-control" type="text" v-model="nuevoUsuario.idDireccion.ciudad">
+                                        <div class="input-group-append"></div>
+                                    </div><div class="input-group" style="padding: 10px;">
+    <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">No. Casa:</span></div><input type="number" class="form-control" v-model="nuevoUsuario.idDireccion.numCasa" min=0 required />
+    <div class="input-group-append"></div>
+</div>
+                                </div>
+                                <div class="modal-footer" style="background: var(--light);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><a class="btn btn-primary btn-sm" role="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #1ec304;" v-on:click="agregarUsuario">Agregar</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalModificarDireccion" style="color: #f0f9ff;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: rgb(78, 115, 223);">
+                                    <h4 class="modal-title" style="color: #ffffff;">Modificar Usuario</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: rgb(248,249,252);"><div class="input-group" style="padding: 10px;">
+    <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">C. Postal:</span></div><input type="number" class="form-control" v-model="usuarios[usuarioSelected].idDireccion.codigoPostal" min=0 />
+    <div class="input-group-append"></div>
+</div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Calle:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].idDireccion.calle">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">Ciudad:</span></div><input class="form-control" type="text" v-model="usuarios[usuarioSelected].idDireccion.ciudad">
+                                        <div class="input-group-append"></div>
+                                    </div><div class="input-group" style="padding: 10px;">
+    <div class="input-group-prepend"><span class="input-group-text" style="width: 100px;">No. Casa:</span></div><input type="number" class="form-control" v-model="usuarios[usuarioSelected].idDireccion.numCasa" min=0 />
+    <div class="input-group-append"></div>
+</div>
+                                </div>
+                                <div class="modal-footer" style="background: var(--light);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><button class="btn btn-primary btn-sm" type="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #1ec304;" v-on:click="modificarUsuario">Modificar</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Libreria© TPI 2021</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="assets/js/libros.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/js/prestamosDevoluciones.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/usuarios.js"></script>
+</body>
+
+</html>

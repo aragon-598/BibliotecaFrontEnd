@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Login - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+</head>
+
+<body class="bg-gradient-primary">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-12 col-xl-10">
+                <div class="card shadow-lg o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-flex">
+                                <div class="flex-grow-1 bg-login-image" style="background: url(&quot;assets/img/biblioteca-logo.png&quot;) center / contain no-repeat;"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <h4 class="text-dark mb-4" style="text-align: center;">Bienvenidos!</h4>
+                                    <form id="AdminLogin" class="user">
+                                        <div class="alert alert-danger collapse" role="alert" id="miAlerta"><span><strong>{{ alerta.titulo }} :</strong>&nbsp;{{ alerta.mensaje }}.</span><i class="fa fa-close close" v-on:click="cerrarAlerta();"></i></div><a class="btn btn-sm float-right" role="button" data-toggle="tooltip" data-bss-tooltip="" title="EJEMPLOS" v-on:click="mostrarUsuarios"><i class="fa fa-question-circle float-right"></i></a>
+                                        <div class="form-group"><input class="form-control form-control-user" type="text" id="txtUsuario" placeholder="Usuario" v-model="user.correo" required=""></div>
+                                        <div class="form-group"><input class="form-control form-control-user" type="password" id="txtPassword" placeholder="Password" v-model="user.password" required=""></div><a class="btn btn-primary btn-block text-white btn-user" role="button" v-on:click="login">Login</a>
+                                        <hr>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="background: var(--blue);text-align: center;">
+                                                        <h4 class="modal-title" style="color: rgb(255,255,255);text-align: center;">Usuarios</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Rol</th>
+                                                                    <th>Usuario</th>
+                                                                    <th>Password</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="usu in users">
+                                                                    <td>{{usu.idRol.rol}}<br></td>
+                                                                    <td>{{usu.correo}}<br></td>
+                                                                    <td>{{usu.password}}<br></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-body"></div>
+                                                    <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal" style="color: rgb(255,255,255);background: var(--blue);">Cerrar</button></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="assets/js/libros.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/js/prestamosDevoluciones.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/usuarios.js"></script>
+</body>
+
+</html>

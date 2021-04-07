@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Profile - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="index.html" style="background: url(&quot;assets/img/biblioteca-logo.png&quot;) center / cover;width: 100px;"></a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link" id="puto" href="usuarios.html"><i class="fas fa-user"></i><span>USUARIOS</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" id="puto2" href="libros.html"><i class="fa fa-book"></i><span>LIBROS</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="prestamos.html"><i class="fas fa-table"></i><span>PRESTAMOS Y DEVOLUCIONES</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid"><a class="navbar-brand justify-content-center align-items-center sidebar-brand m-0" id="nombreUsuario" href="#" style="width: 250px;height: 56px;padding-left: 5px;"></a><button class="btn" id="myBtn" type="button" style="color: var(--blue);"><i class="fa fa-power-off" data-toggle="tooltip" data-bss-tooltip="" style="color: var(--red);width: 25px;height: 25px;font-size: 25px;" title="SALIR DEL SISTEMA"></i></button></div>
+                </nav>
+                <div class="container-fluid" id="AdminLibros">
+                    <h3 class="text-dark mb-0">LIBROS</h3>
+                    <div class="alert alert-success collapse" role="alert" id="miAlerta"><span><strong>{{ alerta.titulo }} :</strong>&nbsp;{{ alerta.mensaje }}.</span><i class="fa fa-close close" v-on:click="cerrarAlerta();"></i></div>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <div class="row">
+                                <div class="col-md-6 text-nowrap">
+                                    <div></div><a class="btn btn-sm" role="button" data-toggle="tooltip" data-bss-tooltip="" style="height: 32px;width: auto;padding: 4px;background-color: transparent;color: var(--blue);font-size: 16px;" v-on:click="mostrarAgregar" title="AGREGAR LIBRO"><i class="fa fa-sign-in" style="color: var(--blue);"></i>&nbsp;Nuevo</a>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-md-right"><label><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" v-model="textoBusqueda"></label></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th><strong>&nbsp;ISBN</strong></th>
+                                            <th>Titulo</th>
+                                            <th>Autor</th>
+                                            <th>Numero de paginas</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(lib, index) in libros" v-show="buscar(index)" v-on:click="libroSelected=index;" v-bind:class="{ 'font-weight-bold' : libroSelected==index }">
+                                            <td>{{lib.idLibro}}<br></td>
+                                            <td>{{lib.titulo}}<br></td>
+                                            <td>{{lib.autor}}<br></td>
+                                            <td>{{lib.numPaginas}}<br></td>
+                                            <td>&nbsp;<a v-on:click="mostrarModificar"><i class="fa fa-edit" data-toggle="tooltip" data-bss-tooltip="" style="color: #28a745;font-size: 20px;" title="MODIFICAR"></i>&nbsp;</a><a v-on:click="mostrarEliminar">&nbsp;<i class="fa fa-trash-o" data-toggle="tooltip" data-bss-tooltip="" style="color: #dc3545;font-size: 20px;" title="ELIMINAR"></i></a>&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalAgregar" style="color: #f0f9ff;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: rgb(78, 115, 223);">
+                                    <h4 class="modal-title" style="color: #ffffff;">Nuevo Libro</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: rgb(248,249,252);">
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text">Titulo:</span></div><input class="form-control" type="text" v-model="nuevoLibro.titulo" required="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text">Autor:</span></div><input class="form-control" type="text" v-model="nuevoLibro.autor" required="">
+                                        <div class="input-group-append"></div>
+                                    </div><div class="input-group" style="padding: 10px;">
+    <div class="input-group-prepend"><span class="input-group-text">Numero de paginas:</span></div><input type="number" class="form-control" v-model="nuevoLibro.numPaginas" required min="0"/>
+</div>
+                                </div>
+                                <div class="modal-footer" style="background: var(--blue);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><button class="btn btn-primary btn-sm" type="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #1ec304;" v-on:click="agregarLibro">Agregar</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalModificar" style="color: #f0f9ff;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: var(--blue);">
+                                    <h4 class="modal-title" style="color: #ffffff;">Modificar Libro</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: #fbfeff;">
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text">Titulo:</span></div><input class="form-control" type="text" v-model="libros[libroSelected].titulo" required="">
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                    <div class="input-group" style="padding: 10px;">
+                                        <div class="input-group-prepend"><span class="input-group-text">Autor:</span></div><input class="form-control" type="text" v-model="libros[libroSelected].autor" required="">
+                                        <div class="input-group-append"></div>
+                                    </div><div class="input-group" style="padding: 10px;">
+    <div class="input-group-prepend"><span class="input-group-text">Numero de paginas:</span></div><input type="number" class="form-control" v-model="libros[libroSelected].numPaginas" required min="0" />
+</div>
+                                </div>
+                                <div class="modal-footer" style="background: var(--blue);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><button class="btn btn-primary btn-sm" type="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #1ec304;" v-on:click="modificarLibro">Modificar</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="modalEliminar" style="color: #f0f9ff;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: var(--blue);background: var(--blue);">
+                                    <h3 class="modal-title" style="color: #ffffff;height: 34px;">¿Desea eliminar el Libro?</h3><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body" style="background: rgb(248,249,252);">
+                                    <h5 class="modal-title" style="color: #000000;"><strong>Id # {{this.libros[this.libroSelected].idLibro}}</strong><br></h5>
+                                    <h5 class="modal-title" style="color: #000000;"><strong>Titulo: {{this.libros[this.libroSelected].titulo}}</strong><br></h5>
+                                </div>
+                                <div class="modal-footer" style="background: var(--blue);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><button class="btn btn-primary btn-sm" type="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: var(--red);" v-on:click="eliminarLibro">Eliminar</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Libreria© TPI 2021</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="assets/js/libros.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/js/prestamosDevoluciones.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/usuarios.js"></script>
+</body>
+
+</html>

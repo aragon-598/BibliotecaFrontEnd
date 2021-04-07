@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Table - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="index.html" style="background: url(&quot;assets/img/biblioteca-logo.png&quot;) center / cover;width: 100px;"></a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link" id="puto" href="usuarios.html"><i class="fas fa-user"></i><span>USUARIOS</span></a></li>
+                    <li class="nav-item"><a class="nav-link" id="puto2" href="libros.html"><i class="fa fa-book"></i><span>LIBROS</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="prestamos.html"><i class="fas fa-table"></i><span>PRESTAMOS Y DEVOLUCIONES</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid"><a class="navbar-brand justify-content-center align-items-center sidebar-brand m-0" id="nombreUsuario" href="#" style="width: 250px;height: 56px;padding-left: 5px;"></a><button class="btn" id="myBtn" type="button" style="color: var(--blue);"><i class="fa fa-power-off" data-toggle="tooltip" data-bss-tooltip="" style="color: var(--red);width: 25px;height: 25px;font-size: 25px;" title="SALIR DEL SISTEMA"></i></button></div>
+                </nav>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-0">PRESTAMOS Y DEVOLUCIONES</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                                <li class="nav-item"><a class="nav-link active" id="item-1-1-tab" data-toggle="tab" role="tab" aria-controls="item-1-1" aria-selected="true" href="#item-1-1">Todos los prestamos</a></li>
+                                <li class="nav-item"><a class="nav-link" id="item-1-2-tab" data-toggle="tab" role="tab" aria-controls="item-1-2" aria-selected="false" href="#item-1-2">Devoluciones pendientes</a></li>
+                                <li class="nav-item"><a class="nav-link" id="item-1-3-tab" data-toggle="tab" role="tab" aria-controls="item-1-3" aria-selected="false" href="#item-1-3">Reservaciones</a></li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div id="nav-tabContent" class="tab-content">
+                                <div id="item-1-1" class="tab-pane fade show active" role="tabpanel" aria-labelledby="item-1-1-tab">
+                                    <div id="AdminPrestamos">
+                                        <div class="row">
+                                            <div class="col-md-6 text-nowrap">
+                                                <div></div><a class="btn btn-sm" role="button" data-toggle="tooltip" data-bss-tooltip="" style="height: 38px;width: auto;padding: 8px;background-color: transparent;color: var(--blue);font-size: 16px;" title="NUEVO PRESTAMO" v-on:click="mostrarAgregar"><i class="fa fa-sign-in" style="color: var(--blue);"></i>&nbsp;Nuevo</a>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-md-right"><label><input type="search" class="form-control form-control-sm" placeholder="Search" v-model="textoBusqueda"></label></div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive table mt-2" role="grid" aria-describedby="dataTable_info">
+                                            <table class="table my-0" id="dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Titulo del libro</th>
+                                                        <th>Autor</th>
+                                                        <th><strong>Usuario</strong><br></th>
+                                                        <th>Fecha de Prestamo</th>
+                                                        <th>Fecha de Entrega</th>
+                                                        <th>Libro Devuelto</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(presta, index) in prestamos" v-show="buscar(index)" v-on:click="prestamoSelected=index;" v-bind:class="{ 'font-weight-bold' : prestamoSelected==index }">
+                                                        <td><i class="fa fa-arrow-right" v-show="prestamoSelected==index"></i>{{presta.titulo}}</td>
+                                                        <td>{{presta.autor}}<br><br></td>
+                                                        <td>{{presta.usuario}}<br></td>
+                                                        <td>{{presta.fecha_Prestamo}}<br></td>
+                                                        <td>{{presta.fecha_Entrega}}<br></td>
+                                                        <td><i class="fa fa-check" style="font-size: 20px;color: var(--success);" v-show="presta.devuelto==0"></i><i class="fa fa-remove" style="font-size: 20px;color: var(--danger);" v-show="presta.devuelto==1"></i></td>
+                                                        <td><i class="fa fa-trash-o" data-toggle="tooltip" data-bss-tooltip="" style="color: #dc3545;font-size: 20px;" title="ELIMINAR PRESTAMO"></i></td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr></tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="modalAgregar">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Modal Title</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>The content of your modal.</p>
+                                                    </div>
+                                                    <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="item-1-2" class="tab-pane fade" role="tabpanel" aria-labelledby="item-1-2-tab">
+                                    <div id="AdminDevoluciones">
+                                        <div class="row">
+                                            <div class="col-md-6 text-nowrap">
+                                                <div></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-md-right"><label><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" v-model="textoBusqueda"></label></div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive table mt-2" role="grid" aria-describedby="dataTable_info">
+                                            <table class="table my-0" id="dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Titulo del libro</th>
+                                                        <th>Autor</th>
+                                                        <th><strong>Usuario</strong><br></th>
+                                                        <th>Fecha de Reserva</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(reser, index) in reservas" v-show="reser.estadoReserva==1&amp;&amp;buscar(index)" v-on:click="reservaSelected=index;" v-bind:class="{ 'font-weight-bold' : reservaSelected==index }">
+                                                        <td>{{reser.idEjemplar.idLibro.titulo}}</td>
+                                                        <td>{{reser.idEjemplar.idLibro.autor}}<br><br></td>
+                                                        <td>{{reser.idUsuario.nombre}}<br></td>
+                                                        <td>{{reser.fechaReserva.substring(0,10)}}<br></td>
+                                                        <td><button class="btn btn-sm" data-toggle="tooltip" data-bss-tooltip="" type="button" title="RECIBIR" v-on:click="modificarReserva"><i class="fa fa-check" style="color: var(--blue);font-size: 20px;"></i></button></td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr></tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="item-1-3" class="tab-pane fade" role="tabpanel" aria-labelledby="item-1-3-tab">
+                                    <div id="AdminReservaciones">
+                                        <div class="row">
+                                            <div class="col-md-6 text-nowrap">
+                                                <div></div><a class="btn btn-sm" role="button" data-toggle="tooltip" data-bss-tooltip="" style="height: 38px;width: auto;padding: 8px;background-color: transparent;color: var(--blue);font-size: 16px;" title="RESERVAR LIBRO" v-on:click="mostrarAgregar"><i class="fa fa-sign-in" style="color: var(--blue);"></i>&nbsp;Nuevo</a>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-md-right"><label><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" v-model="textoBusqueda"></label></div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive table mt-2" role="grid" aria-describedby="dataTable_info">
+                                            <table class="table my-0" id="dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Titulo del libro</th>
+                                                        <th>Autor</th>
+                                                        <th><strong>Usuario</strong><br></th>
+                                                        <th><strong>Estado de Reserva</strong><br></th>
+                                                        <th>Fecha de Reserva</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(reser, index) in reservas" v-show="buscar(index)" v-on:click="reservaSelected=index;" v-bind:class="{ 'font-weight-bold' : reservaSelected==index }">
+                                                        <td>{{reser.idEjemplar.idLibro.titulo}}</td>
+                                                        <td>{{reser.idEjemplar.idLibro.autor}}<br><br></td>
+                                                        <td>{{reser.idUsuario.nombre}}<br></td>
+                                                        <td><i class="fa fa-check" style="font-size: 20px;color: var(--success);" v-show="reser.estadoReserva==1"></i><i class="fa fa-remove" style="font-size: 20px;color: var(--danger);" v-show="reser.estadoReserva==0"></i></td>
+                                                        <td>{{reser.fechaReserva.substring(0,10)}}<br></td>
+                                                        <td><button class="btn btn-sm" data-toggle="tooltip" data-bss-tooltip="" type="button" v-on:click="mostrarEliminar" title="ELIMINAR"><i class="fa fa-trash-o" style="color: #dc3545;font-size: 20px;"></i></button></td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr></tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="modalAgregar-3" style="color: #f0f9ff;">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="color: var(--blue);background: rgb(78, 115, 223);">
+                                                        <h4 class="modal-title" style="color: #ffffff;">Reserva</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    </div>
+                                                    <div class="modal-body" style="background: rgb(248,249,252);">
+                                                        <div class="row">
+                                                            <div class="table-responsive" style="width: 750px;margin: 0px;margin-right: 50px;margin-left: 50px;">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Titulo</th>
+                                                                            <th>Autor</th>
+                                                                            <th>Numero de paginas</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr v-for="(lib, index) in libros" v-on:click="libroSelected=index;" v-bind:class="{ 'font-weight-bold' : libroSelected==index }">
+                                                                            <td>{{lib.titulo}}<br></td>
+                                                                            <td>{{lib.autor}}<br></td>
+                                                                            <td>{{lib.numPaginas}}<br></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer" style="background: var(--light);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><a class="btn btn-primary btn-sm" role="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: #1ec304;" data-toggle="modal" v-on:click="agregarReserva">Agregar</a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="modalEliminar-3" style="color: #f0f9ff;">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="color: var(--blue);background: var(--blue);">
+                                                        <h3 class="modal-title" style="color: #ffffff;height: 34px;">¿Desea eliminar el prestamo?</h3><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    </div>
+                                                    <div class="modal-body" style="background: rgb(248,249,252);">
+                                                        <h5 class="modal-title" style="color: #000000;"><strong>Titulo:</strong>{{this.reservas[this.reservaSelected].idEjemplar.idLibro.titulo}}<br><br></h5>
+                                                        <h5 class="modal-title" style="color: #000000;"><strong>Autor:&nbsp;</strong>{{this.reservas[this.reservaSelected].idEjemplar.idLibro.autor}}<br><br></h5>
+                                                        <h5 class="modal-title" style="color: #000000;"><strong>Usuario:&nbsp;</strong>{{this.reservas[this.reservaSelected].idUsuario.nombre}}<br><br></h5>
+                                                        <h5 class="modal-title" style="color: #000000;"><strong>Fecha de reserva:&nbsp;</strong>{{this.reservas[this.reservaSelected].fechaReserva.substring(0,10)}}<br></h5>
+                                                    </div>
+                                                    <div class="modal-footer" style="background: var(--blue);"><button class="btn btn-danger btn-sm" type="button" data-dismiss="modal" style="background: var(--secondary);">Cancelar</button><button class="btn btn-primary btn-sm" type="button" data-dismiss="modal" style="margin: 0px 0px 0px 10px;background: var(--red);" v-on:click="eliminarReserva">Eliminar</button></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Libreria© TPI 2021</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="assets/js/libros.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/js/prestamosDevoluciones.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/usuarios.js"></script>
+</body>
+
+</html>
